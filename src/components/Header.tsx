@@ -2,6 +2,9 @@ import { Search, MapPin, ShoppingCart, User, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import heyfoodLogo from "@/assets/heyfood-logo.png";
+import { useState } from "react";
+import CartDrawer from "./cart/CartDrawer";
+import { useCart } from "@/contexts/CartContext";
 
 interface HeaderProps {
   searchQuery: string;
@@ -9,6 +12,8 @@ interface HeaderProps {
 }
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { totalItems } = useCart();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card">
       <div className="container mx-auto px-4 py-4">
@@ -54,13 +59,20 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
               Sign In
             </Button>
             
-            <Button variant="ghost" className="relative">
+            <Button 
+              variant="ghost" 
+              className="relative"
+              onClick={() => setIsCartOpen(true)}
+            >
               <ShoppingCart className="h-4 w-4" />
               <span className="ml-2 hidden md:inline">Cart</span>
-              <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
             </Button>
+            <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
           </div>
         </div>
       </div>
