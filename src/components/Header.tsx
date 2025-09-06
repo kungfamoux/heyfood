@@ -33,12 +33,6 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             <span className="hidden font-bold text-xl md:inline">HeyFood</span>
           </div>
 
-          {/* Location */}
-          <div className="hidden md:flex items-center gap-2 text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            <span className="text-sm">Set Location</span>
-          </div>
-
           {/* Search Bar */}
           <div className="flex-1 max-w-md">
             <div className="relative">

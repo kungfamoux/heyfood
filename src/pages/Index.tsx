@@ -131,12 +131,20 @@ const Index = () => {
   const { data: menuItems = [], isLoading: isLoadingMenuItems } = useQuery({
     queryKey: ['menuItems', selectedCategory, searchQuery],
     queryFn: async () => {
+      let items: MenuItem[] = [];
+      
       if (searchQuery) {
-        return searchMenuItems(searchQuery);
+        items = await searchMenuItems(searchQuery);
+      } else {
+        items = await fetchMenuItems();
       }
-      const items = await fetchMenuItems();
-      if (!selectedCategory) return items;
-      return items.filter(item => item.category_id === selectedCategory);
+      
+      // Apply category filter if a category is selected
+      if (selectedCategory) {
+        items = items.filter(item => item.category_id === selectedCategory);
+      }
+      
+      return items;
     },
   });
 
@@ -200,17 +208,27 @@ const Index = () => {
                 className="group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 hover:border-primary/20"
               >
                 <CardContent className="p-0">
-                  <div className="relative h-52 overflow-hidden">
-                    <img 
-                      src={item.image_url || '/placeholder.svg'} 
-                      alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                        target.classList.add('p-4'); // Add padding for SVG placeholder
-                      }}
-                    />
+                  <div className="relative h-52 overflow-hidden bg-gray-50">
+                    <div className="w-full h-full flex flex-col items-center justify-center p-4">
+                      <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                        <svg 
+                          className="w-10 h-10 text-gray-300" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24" 
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={1.5} 
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-sm text-gray-400 font-medium">Food Image</p>
+                      <p className="text-xs text-gray-300 mt-1">Not available</p>
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <button 
                       className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"

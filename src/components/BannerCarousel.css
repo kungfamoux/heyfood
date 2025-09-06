@@ -1,0 +1,26 @@
+.banner-track {
+  transform: translateX(calc(-1 * var(--slide-offset, 0%)));
+  display: flex;
+  transition: transform 500ms ease-in-out;
+}
+
+.banner-slide {
+  background-image: var(--banner-image);
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .banner-slide {
+    height: 16rem; /* md:h-64 */
+  }
+}
+
+.banner-slide:not(.md) {
+  height: 12rem; /* h-48 */
+}
